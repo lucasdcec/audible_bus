@@ -9,7 +9,23 @@ import SwiftUI
 
 struct TelaFavoritos: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack{
+            VStack{
+                
+                HStack{
+                    Image(systemName: "bus")
+                        .frame(width: 20,height: 20)
+                        .accessibilityHidden(true)
+                    VStack{
+                        Text("Audible")
+                        Text("MyBus")
+                    }
+                }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Audible MyBus")
+                Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+            }
+        }
     }
 }
 
