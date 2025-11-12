@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TelaConfimado: View {
     @State var parada:Paradas = Paradas(id: 1, nome: "a", distancia: 10)
+    @State var favoritoComo : Int = 1
     var body: some View {
         
         NavigationStack{
@@ -36,6 +37,36 @@ struct TelaConfimado: View {
                 .padding(.top, 40)
                 .padding(.bottom, 20)
                 Spacer()
+                Button(action: {
+                    favoritoComo = favoritoComo + 1
+                    /**
+                     if favoritoComo % 2 == 0 {
+                            funcao para adicionar aos favoritos
+                     }
+                        else{
+                                funcao para tirar dos favoritos
+                     }
+                     
+                     **/
+                }, label: {
+                    if favoritoComo % 2 == 0{
+                        Image(systemName: "star.fill")
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .clipShape(Circle())
+                    } else {
+                        Image(systemName: "star.fill")
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .clipShape(Circle())
+                    }
+                    
+                })
+                
+                
+                
                 VStack{
                     Text("O proximo ônibus que irá para a parada: ")
                     Text("\(parada.nome) já foi alertado!")
