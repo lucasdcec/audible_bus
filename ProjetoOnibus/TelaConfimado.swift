@@ -36,11 +36,12 @@ struct TelaConfimado: View {
                 .padding(.top, 40)
                 .padding(.bottom, 20)
                 Spacer()
-                Text("O proximo ônibus que irá para a parada: ")
-                Text("\(parada.nome) já foi alertado!")
-                Text("Tempo aproximado de espera:** x minutos**")
-                
-                
+                VStack{
+                    Text("O proximo ônibus que irá para a parada: ")
+                    Text("\(parada.nome) já foi alertado!")
+                    Text("Tempo aproximado de espera:** x minutos**")
+                }
+                .accessibilityLabel("O proximo ônibus que irá para a parada: \(parada.nome) já foi alertado! Tempo aproximado de espera:** x minutos**")
                 
                 
                 Spacer()
