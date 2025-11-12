@@ -23,7 +23,11 @@ struct TelaFavoritos: View {
                 }
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("Audible MyBus")
-                Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+                Spacer()
+                Text("Suas ultimas paradas!")
+                
+                    .font(.title)
+                
             }
         }
     }

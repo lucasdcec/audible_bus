@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TelaConfimado: View {
     var body: some View {
+        NavigationStack{
         ZStack{
             VStack{
                 
@@ -23,9 +24,26 @@ struct TelaConfimado: View {
                 }
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("Audible MyBus")
+                Spacer()
                 Text("confirmado")
+                Spacer()
+                NavigationLink(destination: TelaParadasProximas()) {
+                    Image(systemName: "arrowshape.left.fill")
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .clipShape(Circle())
+                }.accessibilityLabel("Voltar para a página paradas próximas")
+                
+                Image(systemName: "arrow.clockwise")
+                    .padding()
+                    .background(Color.green)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+                Spacer()
             }
         }
+    }
     }
 }
 
