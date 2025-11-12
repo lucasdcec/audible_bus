@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct TelaConfimado: View {
+    @State var parada:Paradas = Paradas(id: 1, nome: "a", distancia: 10)
     var body: some View {
+        
         NavigationStack{
         ZStack{
             VStack{
@@ -27,20 +29,43 @@ struct TelaConfimado: View {
                 Spacer()
                 Text("confirmado")
                 Spacer()
-                NavigationLink(destination: TelaParadasProximas()) {
-                    Image(systemName: "arrowshape.left.fill")
-                        .padding()
+                // Botões de ação
+                HStack {
+                    NavigationLink(destination: ContentView()) {
+                        HStack {
+                            Image(systemName: "arrowshape.left.fill")
+                            Text("Voltar")
+                                .fontWeight(.semibold)
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
                         .background(Color.green)
                         .foregroundColor(.white)
-                        .clipShape(Circle())
-                }.accessibilityLabel("Voltar para a página paradas próximas")
-                
-                Image(systemName: "arrow.clockwise")
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
-                Spacer()
+                        .cornerRadius(25)
+                    }
+                    .accessibilityLabel("Voltar para a página inicial")
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        // Ação para atualizar paradas
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.clockwise")
+                            Text("Atualizar")
+                                .fontWeight(.semibold)
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(25)
+                    }
+                    .accessibilityLabel("Atualizar lista de paradas")
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 30)
+
             }
         }
     }

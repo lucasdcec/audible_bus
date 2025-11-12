@@ -9,47 +9,80 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        NavigationStack{
-            ZStack{
-                VStack{
+        NavigationStack {
+            ZStack {
+                VStack(spacing: 0) {
                     
-                    HStack{
+                    // Header
+                    HStack(spacing: 12) {
                         Image(systemName: "bus")
-                            .frame(width: 20,height: 20)
+                            .font(.title2)
+                            .foregroundColor(.blue)
                             .accessibilityHidden(true)
-                        VStack{
+                        
+                        VStack(alignment: .leading, spacing: 2) {
                             Text("Audible")
+                                .font(.headline)
+                                .fontWeight(.bold)
                             Text("MyBus")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
                         }
                     }
                     .accessibilityElement(children: .combine)
                     .accessibilityLabel("Audible MyBus")
+                    .padding(.top, 60)
+                    .padding(.bottom, 40)
+                    
                     Spacer()
-                    VStack(spacing: 20) {
+                    
+                    // Botões principais
+                    VStack(spacing: 24) {
                         // BOTÃO 1 - Paradas Próximas
                         NavigationLink(destination: TelaParadasProximas()) {
-                            Text("Buscar paradas próximas")
-                                .frame(maxWidth: .infinity,minHeight: 30)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
+                            HStack {
+                                Image(systemName: "location.fill")
+                                    .font(.title3)
+                                Text("Buscar paradas próximas")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 60)
+                            .padding(.horizontal, 20)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                            .shadow(color: .blue.opacity(0.3), radius: 4, x: 0, y: 2)
                         }
                         .accessibilityLabel("Buscar as 5 paradas mais próximas")
                         
                         // BOTÃO 2 - Favoritas
                         NavigationLink(destination: TelaFavoritos()) {
-                            Text("Paradas favoritas")
-                                .frame(maxWidth: .infinity,minHeight: 30)
-                                .padding()
-                                .background(Color.green)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
+                            HStack {
+                                Image(systemName: "star.fill")
+                                    .font(.title3)
+                                Text("Paradas favoritas")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 60)
+                            .padding(.horizontal, 20)
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                            .shadow(color: .green.opacity(0.3), radius: 4, x: 0, y: 2)
                         }
                         .accessibilityLabel("Olhar as paradas favoritas do usuário")
                     }
-                    .padding()
+                    .padding(.horizontal, 32)
+                    
                     Spacer()
+                    
+                    // Footer ou espaço reservado
+                    Text("Encontre seu ponto de ônibus")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding(.bottom, 30)
                 }
             }
         }
