@@ -12,19 +12,35 @@ struct TelaFavoritos: View {
         ZStack{
             VStack{
                 
-                HStack{
+                // Header
+                HStack(spacing: 12) {
                     Image(systemName: "bus")
-                        .frame(width: 20,height: 20)
+                        .font(.title2)
+                        .foregroundColor(.blue)
                         .accessibilityHidden(true)
-                    VStack{
+                    
+                    VStack(alignment: .leading, spacing: 2) {
                         Text("Audible")
+                            .font(.headline)
+                            .fontWeight(.bold)
                         Text("MyBus")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
                     }
                 }
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("Audible MyBus")
-                Spacer()
+                .padding(.top, 40)
+                .padding(.bottom, 20)
+                
                 Text("Suas ultimas paradas!")
+                Image(systemName: "star.fill")
+                    .padding()
+                    .background(Color.green)
+                    .foregroundColor(.white)
+                    .clipShape(Circle())
+//                    .frame(width: 40,height: 30)
+
                 
                     .font(.title)
                 

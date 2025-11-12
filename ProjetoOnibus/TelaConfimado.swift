@@ -15,19 +15,34 @@ struct TelaConfimado: View {
         ZStack{
             VStack{
                 
-                HStack{
+                // Header
+                HStack(spacing: 12) {
                     Image(systemName: "bus")
-                        .frame(width: 20,height: 20)
+                        .font(.title2)
+                        .foregroundColor(.blue)
                         .accessibilityHidden(true)
-                    VStack{
+                    
+                    VStack(alignment: .leading, spacing: 2) {
                         Text("Audible")
+                            .font(.headline)
+                            .fontWeight(.bold)
                         Text("MyBus")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
                     }
                 }
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("Audible MyBus")
+                .padding(.top, 40)
+                .padding(.bottom, 20)
                 Spacer()
-                Text("confirmado")
+                Text("O proximo ônibus que irá para a parada: ")
+                Text("\(parada.nome) já foi alertado!")
+                Text("Tempo aproximado de espera:** x minutos**")
+                
+                
+                
+                
                 Spacer()
                 // Botões de ação
                 HStack {
@@ -44,24 +59,6 @@ struct TelaConfimado: View {
                         .cornerRadius(25)
                     }
                     .accessibilityLabel("Voltar para a página inicial")
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        // Ação para atualizar paradas
-                    }) {
-                        HStack {
-                            Image(systemName: "arrow.clockwise")
-                            Text("Atualizar")
-                                .fontWeight(.semibold)
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 12)
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(25)
-                    }
-                    .accessibilityLabel("Atualizar lista de paradas")
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 30)

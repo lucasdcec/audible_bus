@@ -77,12 +77,7 @@ struct ContentView: View {
                     .padding(.horizontal, 32)
                     
                     Spacer()
-                    
-                    // Footer ou espaço reservado
-                    Text("Encontre seu ponto de ônibus")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                        .padding(.bottom, 30)
+  
                 }
             }
         }
