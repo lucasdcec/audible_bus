@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var gerenteDeFavoritos: GerenteDeFavoritos
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack(spacing: 0) {
-                    
-                    // Header
+                    //Header
                     HStack(spacing: 12) {
                         Image(systemName: "bus")
                             .font(.title2)
@@ -36,9 +36,9 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    // Botões principais
+                    //Botões principais
                     VStack(spacing: 24) {
-                        // BOTÃO 1 - Paradas Próximas
+                        //Paradas Próximas
                         NavigationLink(destination: TelaParadasProximas()) {
                             HStack {
                                 Image(systemName: "location.fill")
@@ -56,7 +56,7 @@ struct ContentView: View {
                         }
                         .accessibilityLabel("Buscar as 5 paradas mais próximas")
                         
-                        // BOTÃO 2 - Favoritas
+                        //Favoritas
                         NavigationLink(destination: TelaFavoritos()) {
                             HStack {
                                 Image(systemName: "star.fill")
@@ -86,4 +86,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(GerenteDeFavoritos())
 }

@@ -144,4 +144,5 @@ struct TelaParadasProximas: View {
 
 #Preview {
     TelaParadasProximas()
+        .environmentObject(GerenteDeFavoritos())
 }

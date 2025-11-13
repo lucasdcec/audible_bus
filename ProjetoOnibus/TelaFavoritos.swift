@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct TelaFavoritos: View {
+    @EnvironmentObject var gerenteDeFavoritos: GerenteDeFavoritos
+    
     var body: some View {
         ZStack{
             VStack{
@@ -33,16 +35,43 @@ struct TelaFavoritos: View {
                 .padding(.top, 40)
                 .padding(.bottom, 20)
                 
-                Text("Suas ultimas paradas!")
-                Image(systemName: "star.fill")
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .clipShape(Circle())
+                Text("Suas paradas favoritas!")
+                    .font(.title).fontWeight(.bold)
+                    .accessibilityLabel("Suas paradas favoritas")
+                if gerenteDeFavoritos.paradasFavoritas.isEmpty {
+                    VStack {
+                        Image(systemName: "star.fill")
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .clipShape(Circle())
 //                    .frame(width: 40,height: 30)
 
                 
-                    .font(.title)
+                            .font(.title)
+                        Text("Nenhuma parada favorita")
+                            .accessibilityLabel("Nenhuma parada favorita por enquanto")
+                    }
+                } else {
+                    List(gerenteDeFavoritos.paradasFavoritas) { parada in
+                        HStack{
+                            VStack(alignment: .leading) {
+                                Text(parada.nome)
+                                Text("\(parada.distancia) metros")
+                                    .font(.subheadline)
+                                    .foregroundColor(.blue)
+                            }
+                            .accessibilityLabel("\(parada.nome). \(parada.distancia) metros")
+                            Button(action: {
+                                gerenteDeFavoritos.removerDosFavoritos(parada)
+                            }, label: {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+                                    .accessibilityLabel("Clique aqui para remover dos favoritos")
+                            })
+                        }
+                    }
+                }
                 
             }
         }
@@ -51,4 +80,5 @@ struct TelaFavoritos: View {
 
 #Preview {
     TelaFavoritos()
+        .environmentObject(GerenteDeFavoritos())
 }

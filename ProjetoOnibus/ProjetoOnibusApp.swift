@@ -12,6 +12,7 @@ struct ProjetoOnibusApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(GerenteDeFavoritos())
         }
     }
 }
