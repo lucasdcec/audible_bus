@@ -19,9 +19,61 @@ struct TelaParadasProximas: View {
         Paradas(id: 2, nome: "Avenida Washington Soares - Edson Queiroz, Fortaleza - CE, 60811-025 - Unifor", distancia: 99),
         Paradas(id: 3, nome: "Avenida Valmir Pontes - Em frente ao NAMI", distancia: 66)
     ]
+    @State private var isLoading = false
+    @State private var errorMessage: String?
     
     var paradasOrdenadas: [Paradas] {
         paradas.sorted { $0.distancia < $1.distancia }
+    }
+    
+    func enviarRequisicaoParada() {
+        guard let url = URL(string: "http://127.0.0.1:1880/paradasolicitada") else {
+            errorMessage = "URL inválida"
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: String] = ["cep": "60835025"]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch {
+            errorMessage = "Erro ao criar corpo da requisição: \(error.localizedDescription)"
+            return
+        }
+        
+        isLoading = true
+        errorMessage = nil
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                isLoading = false
+                
+                if let error = error {
+                    errorMessage = "Erro na requisição: \(error.localizedDescription)"
+                    print("Erro ao enviar requisição: \(error.localizedDescription)")
+                    return
+                }
+                
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("Status da resposta: \(httpResponse.statusCode)")
+                    
+                    if httpResponse.statusCode == 200 {
+                        print("Requisição POST enviada com sucesso!")
+                        if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                            print("Resposta: \(responseString)")
+                        }
+                    } else {
+                        errorMessage = "Erro no servidor: Status \(httpResponse.statusCode)"
+                    }
+                }
+            }
+        }
+        
+        task.resume()
     }
     
     var body: some View {
@@ -138,6 +190,9 @@ struct TelaParadasProximas: View {
                     .padding(.bottom, 30)
                 }
             }
+        }
+        .onAppear {
+            enviarRequisicaoParada()
         }
     }
 }
