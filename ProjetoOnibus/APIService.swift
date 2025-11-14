@@ -9,11 +9,12 @@ import Foundation
 
 // MARK: - Protocolo para injeção de dependência
 protocol APIServiceProtocol {
-    func enviarLocalizacaoParada(latitude: Double, longitude: Double) throws -> Bool
+    func enviarLocalizacaoParada(idStop: Int, latitude: Double, longitude: Double) throws -> Bool
 }
 
 // MARK: - Modelo de dados para requisição
 struct ParadaLocalizacaoRequest: Codable {
+    let idStop: Int
     let latitude: Double
     let longitude: Double
 }
@@ -54,11 +55,12 @@ class APIService: APIServiceProtocol {
     // MARK: - Public Methods
     /// Envia a localização da parada para a API de forma síncrona
     /// - Parameters:
+    ///   - idStop: ID da parada
     ///   - latitude: Latitude da parada
     ///   - longitude: Longitude da parada
     /// - Returns: true se a requisição foi bem-sucedida (200 OK)
     /// - Throws: APIError em caso de falha
-    func enviarLocalizacaoParada(latitude: Double, longitude: Double) throws -> Bool {
+    func enviarLocalizacaoParada(idStop: Int, latitude: Double, longitude: Double) throws -> Bool {
         // Validar e criar a URL
         guard let url = URL(string: "\(baseURL)/paradasolicitada") else {
             throw APIError.invalidURL
@@ -70,7 +72,7 @@ class APIService: APIServiceProtocol {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // Criar o body da requisição
-        let requestBody = ParadaLocalizacaoRequest(latitude: latitude, longitude: longitude)
+        let requestBody = ParadaLocalizacaoRequest(idStop: idStop, latitude: latitude, longitude: longitude)
         
         do {
             request.httpBody = try JSONEncoder().encode(requestBody)

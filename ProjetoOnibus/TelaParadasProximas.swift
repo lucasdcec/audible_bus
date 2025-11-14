@@ -195,6 +195,7 @@ struct TelaParadasProximas: View {
             do {
                 // Chamar o serviço de API de forma síncrona
                 let sucesso = try apiService.enviarLocalizacaoParada(
+                    idStop: parada.id,
                     latitude: parada.latitude,
                     longitude: parada.longitude
                 )
