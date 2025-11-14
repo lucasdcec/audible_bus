@@ -27,6 +27,7 @@
 		C082DE532EC3C29B00C91D84 /* TelaParadasProximas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelaParadasProximas.swift; sourceTree = "<group>"; };
 		C082DE552EC3C2A900C91D84 /* TelaConfimado.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelaConfimado.swift; sourceTree = "<group>"; };
 		C08C00FC2EC66D6B00DE4D9E /* QuemVaiEstarNosFavoritos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuemVaiEstarNosFavoritos.swift; sourceTree = "<group>"; };
+		C082DE572EC3C2FF00C91D84 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +66,7 @@
 				C082DE552EC3C2A900C91D84 /* TelaConfimado.swift */,
 				C08C00FC2EC66D6B00DE4D9E /* QuemVaiEstarNosFavoritos.swift */,
 				C082DE532EC3C29B00C91D84 /* TelaParadasProximas.swift */,
+				C082DE572EC3C2FF00C91D84 /* Info.plist */,
 				C082DE432EC3B27E00C91D84 /* Assets.xcassets */,
 				C082DE452EC3B27E00C91D84 /* Preview Content */,
 			);
@@ -290,7 +292,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ProjetoOnibus/Preview Content\"";
 				DEVELOPMENT_TEAM = 2543Z7898X;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ProjetoOnibus/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -319,7 +321,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ProjetoOnibus/Preview Content\"";
 				DEVELOPMENT_TEAM = 2543Z7898X;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ProjetoOnibus/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
