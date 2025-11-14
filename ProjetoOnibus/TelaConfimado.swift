@@ -12,7 +12,7 @@
 import SwiftUI
 
 struct TelaConfimado: View {
-    @State var parada:Paradas = Paradas(id: 1, nome: "a", distancia: 10)
+    @State var parada:Paradas = Paradas(id: 1, nome: "a", distancia: 10, latitude: 0.0, longitude: 0.0)
     @State var mostrarMensagem: Bool = false
     
     @State var mensagemTexto: String = ""

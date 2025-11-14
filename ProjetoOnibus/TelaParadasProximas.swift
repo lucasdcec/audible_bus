@@ -22,6 +22,16 @@ struct TelaParadasProximas: View {
         Paradas(id: 3, nome: "Avenida Valmir Pontes - NAMI", distancia: 66, latitude: -3.771173, longitude: -38.4810759)
     ]
     
+    // Estados para controlar navegação programática e feedback
+    @State private var navegarParaConfirmacao: Bool = false
+    @State private var paradaSelecionada: Paradas?
+    @State private var mostrarErro: Bool = false
+    @State private var mensagemErro: String = ""
+    @State private var carregando: Bool = false
+    
+    // Instância do serviço de API
+    private let apiService: APIServiceProtocol = APIService()
+    
     var paradasOrdenadas: [Paradas] {
         paradas.sorted { $0.distancia < $1.distancia }
     }
@@ -65,7 +75,9 @@ struct TelaParadasProximas: View {
                     ScrollView {
                         VStack(spacing: 16) {
                             ForEach(paradasOrdenadas) { parada in
-                                NavigationLink(destination: TelaConfimado(parada: parada)) {
+                                Button(action: {
+                                    selecionarParada(parada)
+                                }) {
                                     VStack(alignment: .leading, spacing: 8) {
                                         Text(parada.nome)
                                             .font(.body)
@@ -80,6 +92,12 @@ struct TelaParadasProximas: View {
                                                 .font(.subheadline)
                                                 .fontWeight(.bold)
                                                 .foregroundColor(.blue)
+                                            
+                                            // Indicador de carregamento
+                                            if carregando && paradaSelecionada?.id == parada.id {
+                                                ProgressView()
+                                                    .padding(.leading, 8)
+                                            }
                                         }
                                     }
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -93,11 +111,24 @@ struct TelaParadasProximas: View {
                                             )
                                     )
                                 }
+                                .disabled(carregando)
                                 .accessibilityElement(children: .combine)
                                 .accessibilityLabel("A parada \(parada.nome) está a \(parada.distancia) metros de você")
                             }
                         }
                         .padding(.horizontal, 20)
+                    }
+                    
+                    // Mensagem de erro
+                    if mostrarErro {
+                        Text(mensagemErro)
+                            .font(.subheadline)
+                            .foregroundColor(.red)
+                            .padding()
+                            .background(Color.red.opacity(0.1))
+                            .cornerRadius(8)
+                            .padding(.horizontal, 20)
+                            .accessibilityLabel("Erro: \(mensagemErro)")
                     }
                     
                     Spacer()
@@ -140,6 +171,70 @@ struct TelaParadasProximas: View {
                     .padding(.bottom, 30)
                 }
             }
+            .navigationDestination(isPresented: $navegarParaConfirmacao) {
+                if let parada = paradaSelecionada {
+                    TelaConfimado(parada: parada)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Métodos privados
+    
+    /// Seleciona uma parada e envia sua localização para a API
+    private func selecionarParada(_ parada: Paradas) {
+        // Evitar múltiplas chamadas simultâneas
+        guard !carregando else { return }
+        
+        paradaSelecionada = parada
+        carregando = true
+        mostrarErro = false
+        
+        // Executar em background para não bloquear a UI
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                // Chamar o serviço de API de forma síncrona
+                let sucesso = try apiService.enviarLocalizacaoParada(
+                    idStop: parada.id,
+                    latitude: parada.latitude,
+                    longitude: parada.longitude
+                )
+                
+                // Atualizar UI na thread principal
+                DispatchQueue.main.async {
+                    carregando = false
+                    
+                    if sucesso {
+                        // Navegação bem-sucedida
+                        navegarParaConfirmacao = true
+                    } else {
+                        mostrarErro(mensagem: "Falha ao enviar localização")
+                    }
+                }
+            } catch let error as APIError {
+                // Tratar erros da API
+                DispatchQueue.main.async {
+                    carregando = false
+                    mostrarErro(mensagem: error.localizedDescription)
+                }
+            } catch {
+                // Tratar erros genéricos
+                DispatchQueue.main.async {
+                    carregando = false
+                    mostrarErro(mensagem: "Erro desconhecido: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    /// Mostra mensagem de erro e a esconde após 3 segundos
+    private func mostrarErro(mensagem: String) {
+        mensagemErro = mensagem
+        mostrarErro = true
+        
+        // Esconder erro após 3 segundos
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            mostrarErro = false
         }
     }
 }
