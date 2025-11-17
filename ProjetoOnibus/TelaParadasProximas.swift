@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Paradas: Identifiable, Hashable {
+struct Paradas: Identifiable, Hashable, Codable {
     var id: Int
     var nome: String
     var distancia: Int
