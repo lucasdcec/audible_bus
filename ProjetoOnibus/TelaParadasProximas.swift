@@ -63,13 +63,13 @@ struct TelaParadasProximas: View {
                     .padding(.bottom, 20)
                     
                     // Título
-                    Text("Selecione a parada em que você se encontra:")
+                    Text("Selecione o onibus e parada em que você se encontra:")
                         .font(.title2)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 24)
                         .padding(.bottom, 20)
-                        .accessibilityLabel("Selecione a parada em que você se encontra")
+                        .accessibilityLabel("Selecione o onibus e parada em que você se encontra")
                     
                     // Lista de paradas
                     ScrollView {

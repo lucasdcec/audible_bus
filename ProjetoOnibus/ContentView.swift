@@ -43,7 +43,7 @@ struct ContentView: View {
                             HStack {
                                 Image(systemName: "location.fill")
                                     .font(.title3)
-                                Text("Buscar paradas próximas")
+                                Text("Buscar onibus e paradas próximas")
                                     .font(.headline)
                                     .fontWeight(.semibold)
                             }
@@ -54,14 +54,14 @@ struct ContentView: View {
                             .cornerRadius(12)
                             .shadow(color: .blue.opacity(0.3), radius: 4, x: 0, y: 2)
                         }
-                        .accessibilityLabel("Buscar as 5 paradas mais próximas")
+                        .accessibilityLabel("Buscar onibus e paradas próximas")
                         
                         //Favoritas
                         NavigationLink(destination: TelaFavoritos()) {
                             HStack {
                                 Image(systemName: "star.fill")
                                     .font(.title3)
-                                Text("Paradas favoritas")
+                                Text("Rotas favoritas")
                                     .font(.headline)
                                     .fontWeight(.semibold)
                             }
@@ -72,7 +72,7 @@ struct ContentView: View {
                             .cornerRadius(12)
                             .shadow(color: .green.opacity(0.3), radius: 4, x: 0, y: 2)
                         }
-                        .accessibilityLabel("Olhar as paradas favoritas do usuário")
+                        .accessibilityLabel("Olhar as rotas favoritas do usuário")
                     }
                     .padding(.horizontal, 32)
                     
