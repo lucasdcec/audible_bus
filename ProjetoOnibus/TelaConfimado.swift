@@ -215,7 +215,6 @@ struct TelaConfimado: View {
         }
     }
 }
-}
 
 #Preview {
 TelaConfimado()
