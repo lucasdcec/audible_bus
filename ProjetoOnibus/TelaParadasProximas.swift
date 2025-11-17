@@ -17,9 +17,9 @@ struct Paradas: Identifiable, Hashable {
 
 struct TelaParadasProximas: View {
     @State var paradas: [Paradas] = [
-        Paradas(id: 1, nome: "Avenida Washington Soares - Passarela Unifor", distancia: 700, latitude: -3.7689661, longitude: -38.4827782),
-        Paradas(id: 2, nome: "Avenida Washington Soares - Edson Queiroz - Unifor", distancia: 99, latitude: -3.7708599, longitude: -38.4819135),
-        Paradas(id: 3, nome: "Avenida Valmir Pontes - NAMI", distancia: 66, latitude: -3.771173, longitude: -38.4810759)
+        Paradas(id: 1, nome: "53 - Avenida Washington Soares - Passarela Unifor", distancia: 700, latitude: -3.7689661, longitude: -38.4827782),
+        Paradas(id: 2, nome: "53 - Avenida Washington Soares - Edson Queiroz - Unifor", distancia: 99, latitude: -3.7708599, longitude: -38.4819135),
+        Paradas(id: 3, nome: "21 - Avenida Valmir Pontes - NAMI", distancia: 66, latitude: -3.771173, longitude: -38.4810759)
     ]
     
     // Estados para controlar navegação programática e feedback
