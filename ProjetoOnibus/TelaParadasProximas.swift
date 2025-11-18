@@ -29,11 +29,7 @@ struct TelaParadasProximas: View {
     @State private var mensagemErro: String = ""
     @State private var carregando: Bool = false
     
-<<<<<<< HEAD
     // Instância do serviço de API (usando a implementação real do APIService.swift)
-=======
-    // Instância do serviço de API
->>>>>>> f90548f203b01a64945758b4e938da452be61dac
     private let apiService: APIServiceProtocol = APIService()
     
     var paradasOrdenadas: [Paradas] {

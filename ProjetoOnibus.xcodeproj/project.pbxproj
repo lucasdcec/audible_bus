@@ -14,9 +14,8 @@
 		C082DE522EC3C28600C91D84 /* TelaFavoritos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082DE512EC3C28600C91D84 /* TelaFavoritos.swift */; };
 		C082DE542EC3C29B00C91D84 /* TelaParadasProximas.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082DE532EC3C29B00C91D84 /* TelaParadasProximas.swift */; };
 		C082DE562EC3C2A900C91D84 /* TelaConfimado.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082DE552EC3C2A900C91D84 /* TelaConfimado.swift */; };
-		C0859E332ECCE6C300165386 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0859E322ECCE6C300165386 /* APIService.swift */; };
 		C08C00FD2EC66D6B00DE4D9E /* QuemVaiEstarNosFavoritos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08C00FC2EC66D6B00DE4D9E /* QuemVaiEstarNosFavoritos.swift */; };
-		C3C87FDF8424FAC7F2A575D4 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE649CD0F75DEE7A937DF624 /* APIService.swift */; };
+		C0BC91B72ECCFDE4006E1074 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BC91B62ECCFDE4006E1074 /* APIService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,9 +27,8 @@
 		C082DE512EC3C28600C91D84 /* TelaFavoritos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelaFavoritos.swift; sourceTree = "<group>"; };
 		C082DE532EC3C29B00C91D84 /* TelaParadasProximas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelaParadasProximas.swift; sourceTree = "<group>"; };
 		C082DE552EC3C2A900C91D84 /* TelaConfimado.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelaConfimado.swift; sourceTree = "<group>"; };
-		C0859E322ECCE6C300165386 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		C08C00FC2EC66D6B00DE4D9E /* QuemVaiEstarNosFavoritos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuemVaiEstarNosFavoritos.swift; sourceTree = "<group>"; };
-		CE649CD0F75DEE7A937DF624 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		C0BC91B62ECCFDE4006E1074 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,12 +63,11 @@
 			children = (
 				C082DE3F2EC3B27C00C91D84 /* ProjetoOnibusApp.swift */,
 				C082DE412EC3B27C00C91D84 /* ContentView.swift */,
-				C0859E322ECCE6C300165386 /* APIService.swift */,
 				C082DE512EC3C28600C91D84 /* TelaFavoritos.swift */,
 				C082DE552EC3C2A900C91D84 /* TelaConfimado.swift */,
 				C08C00FC2EC66D6B00DE4D9E /* QuemVaiEstarNosFavoritos.swift */,
+				C0BC91B62ECCFDE4006E1074 /* APIService.swift */,
 				C082DE532EC3C29B00C91D84 /* TelaParadasProximas.swift */,
-				CE649CD0F75DEE7A937DF624 /* APIService.swift */,
 				C082DE432EC3B27E00C91D84 /* Assets.xcassets */,
 				C082DE452EC3B27E00C91D84 /* Preview Content */,
 			);
@@ -156,13 +153,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				C082DE422EC3B27C00C91D84 /* ContentView.swift in Sources */,
-				C0859E332ECCE6C300165386 /* APIService.swift in Sources */,
+				C0BC91B72ECCFDE4006E1074 /* APIService.swift in Sources */,
 				C082DE562EC3C2A900C91D84 /* TelaConfimado.swift in Sources */,
 				C082DE542EC3C29B00C91D84 /* TelaParadasProximas.swift in Sources */,
 				C082DE522EC3C28600C91D84 /* TelaFavoritos.swift in Sources */,
 				C082DE402EC3B27C00C91D84 /* ProjetoOnibusApp.swift in Sources */,
 				C08C00FD2EC66D6B00DE4D9E /* QuemVaiEstarNosFavoritos.swift in Sources */,
-				C3C87FDF8424FAC7F2A575D4 /* APIService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,11 +12,7 @@
 import SwiftUI
 
 struct TelaConfimado: View {
-<<<<<<< HEAD
-    @State var parada: Paradas = Paradas(id: 1, nome: "", distancia: 10, latitude: 0, longitude: 0)
-=======
-    @State var parada: Paradas = Paradas(id: 1, nome: "a", distancia: 10, latitude: 0.0, longitude: 0.0)
->>>>>>> f90548f203b01a64945758b4e938da452be61dac
+    @State var parada: Paradas = Paradas(id: 1, nome: "", distancia: 10, latitude: 0.0, longitude: 0.0)
     @State var mostrarMensagem: Bool = false
     @State var mensagemTexto: String = ""
     @State var quantidadeVezes: Int = 1
@@ -31,8 +27,6 @@ struct TelaConfimado: View {
         NavigationStack {
             ZStack {
                 VStack {
-<<<<<<< HEAD
-                    
                     // Header
                     HStack(spacing: 12) {
                         Image("LogoDoApp")
@@ -41,14 +35,6 @@ struct TelaConfimado: View {
                             .foregroundColor(.blue)
                             .accessibilityHidden(true)
                         
-=======
-                    // Header
-                    HStack(spacing: 12) {
-                        Image(systemName: "bus")
-                            .font(.title2)
-                            .foregroundColor(.blue)
-                            .accessibilityHidden(true)
->>>>>>> f90548f203b01a64945758b4e938da452be61dac
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Audible")
                                 .font(.headline)
@@ -56,7 +42,6 @@ struct TelaConfimado: View {
                             Text("MyBus")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
-<<<<<<< HEAD
                         }
                     }
                     .accessibilityElement(children: .combine)
@@ -76,6 +61,10 @@ struct TelaConfimado: View {
                             mensagemTexto = "removido dos favoritos"
                         }
                         mostrarMensagem = true
+                        
+                        // Enviar POST para paradafavorita ao clicar no botão
+                        enviarParadaFavorita()
+                        
                         Task {
                             try? await Task.sleep(nanoseconds: 2_000_000_000)
                             mostrarMensagem = false
@@ -101,12 +90,12 @@ struct TelaConfimado: View {
                         }
                     })
                     .accessibilityElement(children: .combine)
-                    .accessibilityLabel("Botão favorito") //Label fixa
-                    .accessibilityValue(gerenteDeFavoritos.isFavorito(parada) ? "Parada favorita" : "Não é favorita") //Resposta dinamica
-                    .accessibilityHint("Toque duas vezes para adicionar ou remover dos favoritos") //Ação
+                    .accessibilityLabel("Botão favorito")
+                    .accessibilityValue(gerenteDeFavoritos.isFavorito(parada) ? "Parada favorita" : "Não é favorita")
+                    .accessibilityHint("Toque duas vezes para adicionar ou remover dos favoritos")
                     
                     Spacer()
-                        .frame(height: 40) //Espaçamento entre botão e card
+                        .frame(height: 40)
                     
                     //Card das Informações
                     VStack(spacing: 16) {
@@ -151,6 +140,17 @@ struct TelaConfimado: View {
                     .accessibilityElement(children: .combine)
                     .accessibilityLabel("Confirmação recebida! O próximo ônibus para a parada \(parada.nome) já foi alertado! Tempo aproximado de espera: x minutos")
                     
+                    // Mensagem de erro de envio
+                    if let erroEnvio = erroEnvio {
+                        Text("Erro ao enviar parada favorita: \(erroEnvio)")
+                            .font(.subheadline)
+                            .foregroundColor(.red)
+                            .padding()
+                            .background(Color.red.opacity(0.1))
+                            .cornerRadius(8)
+                            .padding(.horizontal, 20)
+                    }
+                    
                     Spacer()
                     
                     //Botões de ação
@@ -169,112 +169,12 @@ struct TelaConfimado: View {
                         }
                         .accessibilityLabel("Voltar para a página inicial")
                     }
-=======
-                        }
-                    }
-                    .accessibilityElement(children: .combine)
-                    .accessibilityLabel("Audible MyBus")
-                    .padding(.top, 40)
-                    .padding(.bottom, 20)
-                    Spacer()
-                    Button(action: {
-                        gerenteDeFavoritos.toggleFavorito(parada)
-                        quantidadeVezes = quantidadeVezes + 1
-                        if gerenteDeFavoritos.isFavorito(parada) {
-                            mensagemTexto = "adicionado aos favoritos"
-                        } else {
-                            mensagemTexto = "removido dos favoritos"
-                        }
-                        mostrarMensagem = true
-                        Task {
-                            try? await Task.sleep(nanoseconds: 2_000_000_000)
-                            mostrarMensagem = false
-                        }
-                        // Enviar POST para paradafavorita ao clicar no botão
-                        enviarParadaFavorita()
-                    }, label: {
-                        if gerenteDeFavoritos.isFavorito(parada) {
-                            HStack {
-                                Image(systemName: "star.fill")
-                                    .padding()
-                                    .background(Color.green)
-                                    .foregroundColor(.white)
-                                    .clipShape(Circle())
-                                    .accessibilityLabel("Parada adicionada aos favoritos")
-                                if mostrarMensagem {
-                                    Text(mensagemTexto)
-                                }
-                            }
-                        } else {
-                            if quantidadeVezes == 1 {
-                                HStack {
-                                    Image(systemName: "star.fill")
-                                        .padding()
-                                        .background(Color.gray)
-                                        .foregroundColor(.white)
-                                        .clipShape(Circle())
-                                        .accessibilityLabel("Clique para adicionar ou remover dos favoritos")
-                                    if mostrarMensagem {
-                                        Text(mensagemTexto)
-                                    }
-                                }
-                            } else {
-                                HStack {
-                                    Image(systemName: "star.fill")
-                                        .padding()
-                                        .background(Color.gray)
-                                        .foregroundColor(.white)
-                                        .clipShape(Circle())
-                                        .accessibilityLabel("Parada removida dos favoritos")
-                                    if mostrarMensagem {
-                                        Text(mensagemTexto)
-                                    }
-                                }
-                            }
-                        }
-                    })
-                    VStack {
-                        Text("O próximo ônibus que irá para a parada: ")
-                        Text("\(parada.nome) já foi alertado!")
-                        Text("Tempo aproximado de espera:** x minutos**")
-                    }
-                    .accessibilityLabel("O próximo ônibus que irá para a parada: \(parada.nome) já foi alertado! Tempo aproximado de espera:** x minutos**")
-                    // Mensagem de erro de envio
-                    if let erroEnvio = erroEnvio {
-                        Text("Erro ao enviar parada favorita: \(erroEnvio)")
-                            .font(.subheadline)
-                            .foregroundColor(.red)
-                            .padding()
-                            .background(Color.red.opacity(0.1))
-                            .cornerRadius(8)
-                            .padding(.horizontal, 20)
-                    }
-                    Spacer()
-                    // Botões de ação
-                    HStack {
-                        NavigationLink(destination: ContentView()) {
-                            HStack {
-                                Image(systemName: "arrowshape.left.fill")
-                                Text("Voltar")
-                                    .fontWeight(.semibold)
-                            }
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
-                            .background(Color.green)
-                            .foregroundColor(.white)
-                            .cornerRadius(25)
-                        }
-                        .accessibilityLabel("Voltar para a página inicial")
-                    }
->>>>>>> f90548f203b01a64945758b4e938da452be61dac
                     .padding(.horizontal, 24)
                     .padding(.bottom, 30)
                 }
             }
         }
     }
-<<<<<<< HEAD
-=======
 
     // MARK: - Envio de parada favorita
     private func enviarParadaFavorita() {
@@ -347,7 +247,6 @@ struct TelaConfimado: View {
             throw error
         }
     }
->>>>>>> f90548f203b01a64945758b4e938da452be61dac
 }
 
 #Preview {
