@@ -119,7 +119,7 @@ struct TelaConfimado: View {
                                 .font(.body)
                                 .foregroundColor(.secondary)
                             
-                            Text("Tempo aproximado de espera: x minutos")
+                            Text("Tempo aproximado de espera: 4 minutos")
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                                 .foregroundColor(.blue)
@@ -138,7 +138,7 @@ struct TelaConfimado: View {
                     )
                     .padding(.horizontal, 24)
                     .accessibilityElement(children: .combine)
-                    .accessibilityLabel("Confirmação recebida! O próximo ônibus para a parada \(parada.nome) já foi alertado! Tempo aproximado de espera: x minutos")
+                    .accessibilityLabel("Confirmação recebida! O próximo ônibus para a parada \(parada.nome) já foi alertado! Tempo aproximado de espera: 4 minutos")
                     
                     // Mensagem de erro de envio
                     if let erroEnvio = erroEnvio {

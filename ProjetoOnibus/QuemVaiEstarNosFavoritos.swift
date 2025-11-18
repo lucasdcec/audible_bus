@@ -9,6 +9,7 @@ import SwiftUI
 
 class GerenteDeFavoritos: ObservableObject {
     @Published var paradasFavoritas: [Paradas] = []
+    private let apiService: APIServiceProtocol = APIService()
     
     func adicionarAosFavoritos(_ parada: Paradas) {
         if !paradasFavoritas.contains(where: { $0.id == parada.id }) {
@@ -38,5 +39,19 @@ class GerenteDeFavoritos: ObservableObject {
     
     func quantidadeDeFavoritos() -> Int {
         return paradasFavoritas.count
+    }
+
+    /// Carrega as paradas favoritas do backend e atualiza o array local
+    func carregarFavoritos() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                let paradas = try self.apiService.fetchParadasFavoritas()
+                DispatchQueue.main.async {
+                    self.paradasFavoritas = paradas
+                }
+            } catch {
+                print("Erro ao carregar paradas favoritas: \(error.localizedDescription)")
+            }
+        }
     }
 }
