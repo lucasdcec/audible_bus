@@ -161,8 +161,8 @@ class APIService: APIServiceProtocol {
 
             
             if httpResponse.statusCode == 404 {
-                // Sem registro encontrado
-                result = .success(nil)
+                // Sem registro encontrado — retornar lista vazia
+                result = .success([])
                 return
             }
             guard httpResponse.statusCode == 200 else {
