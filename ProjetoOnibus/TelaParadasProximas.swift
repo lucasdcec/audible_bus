@@ -29,7 +29,11 @@ struct TelaParadasProximas: View {
     @State private var mensagemErro: String = ""
     @State private var carregando: Bool = false
     
+<<<<<<< HEAD
     // Instância do serviço de API (usando a implementação real do APIService.swift)
+=======
+    // Instância do serviço de API
+>>>>>>> f90548f203b01a64945758b4e938da452be61dac
     private let apiService: APIServiceProtocol = APIService()
     
     var paradasOrdenadas: [Paradas] {
@@ -63,13 +67,13 @@ struct TelaParadasProximas: View {
                     .padding(.top, 40)
                     
                     // Título
-                    Text("Selecione a parada em que você se encontra:")
+                    Text("Selecione o onibus e parada em que você se encontra:")
                         .font(.title2)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 24)
                         .padding(.bottom, 20)
-                        .accessibilityLabel("Selecione a parada em que você se encontra")
+                        .accessibilityLabel("Selecione o onibus e parada em que você se encontra")
                     
                     // Lista de paradas
                     ScrollView {

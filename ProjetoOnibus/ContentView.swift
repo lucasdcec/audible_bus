@@ -45,7 +45,7 @@ struct ContentView: View {
                             HStack {
                                 Image(systemName: "location.fill")
                                     .font(.title3)
-                                Text("Buscar paradas próximas")
+                                Text("Buscar onibus e paradas próximas")
                                     .font(.headline)
                                     .fontWeight(.semibold)
                             }
@@ -56,15 +56,19 @@ struct ContentView: View {
                             .cornerRadius(12)
                             .shadow(color: .blue.opacity(0.3), radius: 4, x: 0, y: 2)
                         }
+<<<<<<< HEAD
                         .accessibilityElement(children: .combine)
                         .accessibilityLabel("Buscar paradas próximas")
+=======
+                        .accessibilityLabel("Buscar onibus e paradas próximas")
+>>>>>>> f90548f203b01a64945758b4e938da452be61dac
                         
                         //Favoritas
                         NavigationLink(destination: TelaFavoritos()) {
                             HStack {
                                 Image(systemName: "star.fill")
                                     .font(.title3)
-                                Text("Paradas favoritas")
+                                Text("Rotas favoritas")
                                     .font(.headline)
                                     .fontWeight(.semibold)
                             }
@@ -75,8 +79,12 @@ struct ContentView: View {
                             .cornerRadius(12)
                             .shadow(color: .green.opacity(0.3), radius: 4, x: 0, y: 2)
                         }
+<<<<<<< HEAD
                         .accessibilityElement(children: .combine)
                         .accessibilityLabel("Paradas favoritas")
+=======
+                        .accessibilityLabel("Olhar as rotas favoritas do usuário")
+>>>>>>> f90548f203b01a64945758b4e938da452be61dac
                     }
                     .padding(.horizontal, 32)
                     
