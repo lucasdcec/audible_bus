@@ -47,7 +47,12 @@ struct TelaFavoritos: View {
                             carregando = false
                         }
                     }
-                if gerenteDeFavoritos.paradasFavoritas.isEmpty {
+                if carregando {
+                    // Mostrar indicador enquanto carrega
+                    ProgressView("Carregando...")
+                        .padding()
+                } else if gerenteDeFavoritos.paradasFavoritas.isEmpty {
+                    // Mostrar mensagem de nenhuma parada favorita uma única vez
                     List {
                         HStack {
                             VStack(alignment: .leading) {
@@ -63,26 +68,6 @@ struct TelaFavoritos: View {
                         }
                         .accessibilityElement(children: .combine)
                         .accessibilityLabel("Nenhuma parada favorita. Adicione paradas para vê-las aqui")
-                    }
-                    if carregando {
-                        ProgressView("Carregando...")
-                    } else {
-                        List {
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text("Nenhuma parada favorita")
-                                        .font(.headline)
-                                        .foregroundColor(.gray)
-                                    Text("Adicione paradas para vê-las aqui")
-                                        .font(.subheadline)
-                                        .foregroundColor(.blue)
-                                }
-                                Image(systemName: "star.fill")
-                                    .foregroundColor(.yellow)
-                            }
-                            .accessibilityElement(children: .combine)
-                            .accessibilityLabel("Nenhuma parada favorita. Adicione paradas para vê-las aqui")
-                        }
                     }
                 } else {
                     List(gerenteDeFavoritos.paradasFavoritas) { parada in

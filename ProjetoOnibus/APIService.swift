@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Protocolo para injeção de dependência
 protocol APIServiceProtocol {
-    func enviarLocalizacaoParada(idStop: Int, latitude: Double, longitude: Double) throws -> Bool
+    func enviarLocalizacaoParada(idStop: Int, latitude: Double, longitude: Double, solicitado: Bool) throws -> Bool
     func fetchParadasFavoritas() throws -> [Paradas]
     func fetchParadaFavoritaByAppId(_ id: Int) throws -> ParadaFavoritaRecord?
     func deleteParadaFavoritaDocument(_ documentId: String, rev: String) throws -> Bool
@@ -20,6 +20,7 @@ struct ParadaLocalizacaoRequest: Codable {
     let idStop: Int
     let latitude: Double
     let longitude: Double
+    let solicitado: Bool
 }
 
 // Modelo que representa o documento armazenado no banco do servidor (Node-RED/CouchDB-like)
@@ -74,7 +75,7 @@ class APIService: APIServiceProtocol {
     ///   - longitude: Longitude da parada
     /// - Returns: true se a requisição foi bem-sucedida (200 OK)
     /// - Throws: APIError em caso de falha
-    func enviarLocalizacaoParada(idStop: Int, latitude: Double, longitude: Double) throws -> Bool {
+    func enviarLocalizacaoParada(idStop: Int, latitude: Double, longitude: Double, solicitado: Bool) throws -> Bool {
         // Validar e criar a URL
         guard let url = URL(string: "\(baseURL)/paradasolicitada") else {
             throw APIError.invalidURL
@@ -87,7 +88,7 @@ class APIService: APIServiceProtocol {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
         // Criar o body da requisição
-        let requestBody = ParadaLocalizacaoRequest(idStop: idStop, latitude: latitude, longitude: longitude)
+        let requestBody = ParadaLocalizacaoRequest(idStop: idStop, latitude: latitude, longitude: longitude, solicitado: solicitado)
         
         do {
             request.httpBody = try JSONEncoder().encode(requestBody)
