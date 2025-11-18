@@ -84,6 +84,7 @@ class APIService: APIServiceProtocol {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
         
         // Criar o body da requisição
         let requestBody = ParadaLocalizacaoRequest(idStop: idStop, latitude: latitude, longitude: longitude)
@@ -113,10 +114,19 @@ class APIService: APIServiceProtocol {
                 return
             }
             
-            // Verificar status code
-            if httpResponse.statusCode == 200 {
+            // Debug: log request body
+            if let body = request.httpBody, let str = String(data: body, encoding: .utf8) {
+                print("[APIService.enviarLocalizacaoParada] request body: \(str)")
+            }
+            // Verificar status code (aceitar qualquer 2xx como sucesso)
+            if (200...299).contains(httpResponse.statusCode) {
                 result = .success(true)
             } else {
+                if let data = data, let body = String(data: data, encoding: .utf8) {
+                    print("APIService.enviarLocalizacaoParada -> HTTP status: \(httpResponse.statusCode) body: \(body)")
+                } else {
+                    print("APIService.enviarLocalizacaoParada -> HTTP status: \(httpResponse.statusCode) (no body)")
+                }
                 result = .failure(.httpError(statusCode: httpResponse.statusCode))
             }
         }
@@ -165,7 +175,12 @@ class APIService: APIServiceProtocol {
                 result = .success([])
                 return
             }
-            guard httpResponse.statusCode == 200 else {
+            if httpResponse.statusCode == 404 {
+                // Not found: return nil instead of throwing
+                result = .success(nil)
+                return
+            }
+            guard (200...299).contains(httpResponse.statusCode) else {
                 result = .failure(.httpError(statusCode: httpResponse.statusCode))
                 return
             }
@@ -221,7 +236,18 @@ class APIService: APIServiceProtocol {
                 return
             }
 
-            guard httpResponse.statusCode == 200 else {
+            if httpResponse.statusCode == 404 {
+                // Not found — return nil
+                result = .success(nil)
+                return
+            }
+            guard (200...299).contains(httpResponse.statusCode) else {
+                // debug
+                if let data = data, let body = String(data: data, encoding: .utf8) {
+                    print("APIService.fetchParadaFavoritaByAppId -> HTTP status: \(httpResponse.statusCode) body: \(body)")
+                } else {
+                    print("APIService.fetchParadaFavoritaByAppId -> HTTP status: \(httpResponse.statusCode) (no body)")
+                }
                 result = .failure(.httpError(statusCode: httpResponse.statusCode))
                 return
             }
@@ -298,9 +324,14 @@ class APIService: APIServiceProtocol {
                 result = .failure(.invalidResponse)
                 return
             }
-            if httpResponse.statusCode == 200 {
+            if (200...299).contains(httpResponse.statusCode) {
                 result = .success(true)
             } else {
+                if let data = data, let body = String(data: data, encoding: .utf8) {
+                    print("APIService.deleteParadaFavoritaDocument -> HTTP status: \(httpResponse.statusCode) body: \(body)")
+                } else {
+                    print("APIService.deleteParadaFavoritaDocument -> HTTP status: \(httpResponse.statusCode) (no body)")
+                }
                 result = .failure(.httpError(statusCode: httpResponse.statusCode))
             }
         }

@@ -228,6 +228,7 @@ struct TelaConfimado: View {
             do {
                 // Buscar documento do servidor usando o id da aplicação
                 if let registro = try self.apiService.fetchParadaFavoritaByAppId(parada.id) {
+                    print("[enviarDeleteFavorita] registro encontrado: _id=\(registro._id) _rev=\(registro._rev ?? "nil")")
                     guard let rev = registro._rev else {
                         DispatchQueue.main.async {
                             carregando = false
@@ -238,6 +239,7 @@ struct TelaConfimado: View {
 
                     // Enviar delete com _id e _rev
                     let sucesso = try self.apiService.deleteParadaFavoritaDocument(registro._id, rev: rev)
+                    print("[enviarDeleteFavorita] delete result: \(sucesso)")
                     DispatchQueue.main.async {
                         carregando = false
                         if !sucesso {
@@ -248,6 +250,7 @@ struct TelaConfimado: View {
                         }
                     }
                 } else {
+                    print("[enviarDeleteFavorita] nenhum registro encontrado para id=\(parada.id)")
                     // Registro não encontrado — considera sucesso ou apenas remove localmente
                     DispatchQueue.main.async {
                         carregando = false
@@ -275,6 +278,7 @@ struct TelaConfimado: View {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
         // O body será o objeto parada serializado
         let encoder = JSONEncoder()
         do {
@@ -284,6 +288,11 @@ struct TelaConfimado: View {
         }
         let semaphore = DispatchSemaphore(value: 0)
         var result: Result<Bool, APIError> = .failure(.invalidResponse)
+        // debug
+        if let body = request.httpBody, let str = String(data: body, encoding: .utf8) {
+            print("[TelaConfimado] POST /paradafavorita body: \(str)")
+        }
+
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             defer { semaphore.signal() }
             if let error = error {
@@ -294,10 +303,20 @@ struct TelaConfimado: View {
                 result = .failure(.invalidResponse)
                 return
             }
-            if httpResponse.statusCode == 200 {
+            // Aceitar qualquer status 2xx como sucesso (Node-RED costuma devolver 201 Created)
+            if (200...299).contains(httpResponse.statusCode) {
                 result = .success(true)
             } else {
                 result = .failure(.httpError(statusCode: httpResponse.statusCode))
+            }
+            // Debug logs para identificar problemas
+            if let requestBody = request.httpBody, let bodyString = String(data: requestBody, encoding: .utf8) {
+                print("[enviarFavoritaRequest] request body: \(bodyString)")
+            }
+            if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                print("[enviarFavoritaRequest] response (status \(httpResponse.statusCode)): \(responseString)")
+            } else {
+                print("[enviarFavoritaRequest] response status: \(httpResponse.statusCode), no body")
             }
         }
         task.resume()
