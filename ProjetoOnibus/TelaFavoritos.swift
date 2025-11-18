@@ -13,11 +13,11 @@ struct TelaFavoritos: View {
     var body: some View {
         ZStack{
             VStack{
-                
-                // Header
+                //Header
                 HStack(spacing: 12) {
-                    Image(systemName: "bus")
-                        .font(.title2)
+                    Image("LogoDoApp")
+                        .resizable()
+                        .frame(width: 40,height: 40)
                         .foregroundColor(.blue)
                         .accessibilityHidden(true)
                     
@@ -33,24 +33,27 @@ struct TelaFavoritos: View {
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("Audible MyBus")
                 .padding(.top, 40)
-                .padding(.bottom, 20)
                 
+                //Listagem das paradas favoritas
                 Text("Suas paradas favoritas!")
                     .font(.title).fontWeight(.bold)
                     .accessibilityLabel("Suas paradas favoritas")
                 if gerenteDeFavoritos.paradasFavoritas.isEmpty {
-                    VStack {
-                        Image(systemName: "star.fill")
-                            .padding()
-                            .background(Color.green)
-                            .foregroundColor(.white)
-                            .clipShape(Circle())
-//                    .frame(width: 40,height: 30)
-
-                
-                            .font(.title)
-                        Text("Nenhuma parada favorita")
-                            .accessibilityLabel("Nenhuma parada favorita por enquanto")
+                    List {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text("Nenhuma parada favorita")
+                                    .font(.headline)
+                                    .foregroundColor(.gray)
+                                Text("Adicione paradas para vê-las aqui")
+                                    .font(.subheadline)
+                                    .foregroundColor(.blue)
+                            }
+                            Image(systemName: "star.fill")
+                                .foregroundColor(.yellow)
+                        }
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Nenhuma parada favorita. Adicione paradas para vê-las aqui")
                     }
                 } else {
                     List(gerenteDeFavoritos.paradasFavoritas) { parada in
@@ -61,14 +64,17 @@ struct TelaFavoritos: View {
                                     .font(.subheadline)
                                     .foregroundColor(.blue)
                             }
-                            .accessibilityLabel("\(parada.nome). \(parada.distancia) metros")
                             Button(action: {
                                 gerenteDeFavoritos.removerDosFavoritos(parada)
                             }, label: {
                                 Image(systemName: "trash")
                                     .foregroundColor(.red)
-                                    .accessibilityLabel("Clique aqui para remover dos favoritos")
                             })
+                        }
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("\(parada.nome). \(parada.distancia) metros. Botão remover")
+                        .accessibilityAction(named: "Remover dos favoritos") { 
+                            gerenteDeFavoritos.removerDosFavoritos(parada)
                         }
                     }
                 }

@@ -13,6 +13,7 @@ struct ProjetoOnibusApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(GerenteDeFavoritos())
+//                .environment(\.locale, Locale(identifier: "pt-BR"))
         }
     }
 }

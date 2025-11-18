@@ -15,8 +15,10 @@ struct ContentView: View {
                 VStack(spacing: 0) {
                     //Header
                     HStack(spacing: 12) {
-                        Image(systemName: "bus")
-                            .font(.title2)
+                        Image("LogoDoApp")
+                            .resizable()
+                            .frame(width: 40,height: 40)
+//                            .font(.title2)
                             .foregroundColor(.blue)
                             .accessibilityHidden(true)
                         
@@ -54,7 +56,8 @@ struct ContentView: View {
                             .cornerRadius(12)
                             .shadow(color: .blue.opacity(0.3), radius: 4, x: 0, y: 2)
                         }
-                        .accessibilityLabel("Buscar as 5 paradas mais próximas")
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Buscar paradas próximas")
                         
                         //Favoritas
                         NavigationLink(destination: TelaFavoritos()) {
@@ -72,7 +75,8 @@ struct ContentView: View {
                             .cornerRadius(12)
                             .shadow(color: .green.opacity(0.3), radius: 4, x: 0, y: 2)
                         }
-                        .accessibilityLabel("Olhar as paradas favoritas do usuário")
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Paradas favoritas")
                     }
                     .padding(.horizontal, 32)
                     
