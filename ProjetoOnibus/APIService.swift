@@ -11,11 +11,24 @@ import Foundation
 protocol APIServiceProtocol {
     func enviarLocalizacaoParada(idStop: Int, latitude: Double, longitude: Double) throws -> Bool
     func fetchParadasFavoritas() throws -> [Paradas]
+    func fetchParadaFavoritaByAppId(_ id: Int) throws -> ParadaFavoritaRecord?
+    func deleteParadaFavoritaDocument(_ documentId: String, rev: String) throws -> Bool
 }
 
 // MARK: - Modelo de dados para requisição
 struct ParadaLocalizacaoRequest: Codable {
     let idStop: Int
+    let latitude: Double
+    let longitude: Double
+}
+
+// Modelo que representa o documento armazenado no banco do servidor (Node-RED/CouchDB-like)
+struct ParadaFavoritaRecord: Codable {
+    let _id: String
+    let _rev: String?
+    let id: Int
+    let nome: String
+    let distancia: Int
     let latitude: Double
     let longitude: Double
 }
@@ -146,6 +159,12 @@ class APIService: APIServiceProtocol {
                 return
             }
 
+            
+            if httpResponse.statusCode == 404 {
+                // Sem registro encontrado
+                result = .success(nil)
+                return
+            }
             guard httpResponse.statusCode == 200 else {
                 result = .failure(.httpError(statusCode: httpResponse.statusCode))
                 return
@@ -166,6 +185,132 @@ class APIService: APIServiceProtocol {
         switch result {
         case .success(let paradas):
             return paradas
+        case .failure(let error):
+            throw error
+        }
+    }
+
+    /// Busca uma parada favorita no backend usando o id da aplicação (campo id)
+    ///
+    /// Observação: o servidor pode retornar mais de um documento com o mesmo `id` (isso acontece com bancos NoSQL
+    /// quando não há uma restrição de unicidade no campo). Essa função tenta decodificar primeiro um array e,
+    /// caso existam múltiplos registros, retorna apenas o primeiro elemento encontrado. Isso é intencional —
+    /// quando necessário apagar um único registro, removemos apenas a primeira ocorrência.
+    func fetchParadaFavoritaByAppId(_ id: Int) throws -> ParadaFavoritaRecord? {
+        guard let url = URL(string: "\(baseURL)/paradafavorita?id=\(id)") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+
+        let semaphore = DispatchSemaphore(value: 0)
+        var result: Result<ParadaFavoritaRecord?, APIError> = .failure(.invalidResponse)
+
+        let task = session.dataTask(with: request) { data, response, error in
+            defer { semaphore.signal() }
+
+            if let error = error {
+                result = .failure(.networkError(error))
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse,
+                  let data = data else {
+                result = .failure(.invalidResponse)
+                return
+            }
+
+            guard httpResponse.statusCode == 200 else {
+                result = .failure(.httpError(statusCode: httpResponse.statusCode))
+                return
+            }
+
+            // tentar decodificar array primeiro
+            let decoder = JSONDecoder()
+            do {
+                if let array = try? decoder.decode([ParadaFavoritaRecord].self, from: data), let first = array.first {
+                    result = .success(first)
+                    return
+                }
+                let single = try decoder.decode(ParadaFavoritaRecord.self, from: data)
+                result = .success(single)
+            } catch {
+                // tentar wrappers comuns (CouchDB-like) - { "docs": [ ... ] }
+                do {
+                    struct DocsWrapper: Codable { let docs: [ParadaFavoritaRecord] }
+                    let docs = try decoder.decode(DocsWrapper.self, from: data)
+                    result = .success(docs.docs.first)
+                    return
+                } catch {
+                    // tentar o formato rows -> { "rows": [ {"doc": {...} } ] }
+                    do {
+                        struct Row: Codable { let doc: ParadaFavoritaRecord }
+                        struct RowsWrapper: Codable { let rows: [Row] }
+                        let rows = try decoder.decode(RowsWrapper.self, from: data)
+                        result = .success(rows.rows.first?.doc)
+                        return
+                    } catch {
+                        result = .failure(.networkError(error))
+                    }
+                }
+            }
+        }
+
+        task.resume()
+        semaphore.wait()
+
+        switch result {
+        case .success(let record):
+            return record
+        case .failure(let error):
+            throw error
+        }
+    }
+
+    /// Deleta o documento do backend usando o _id e _rev do banco
+    func deleteParadaFavoritaDocument(_ documentId: String, rev: String) throws -> Bool {
+        guard let url = URL(string: "\(baseURL)/paradafavorita/delete") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: Any] = ["_id": documentId, "_rev": rev]
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch {
+            throw APIError.networkError(error)
+        }
+
+        let semaphore = DispatchSemaphore(value: 0)
+        var result: Result<Bool, APIError> = .failure(.invalidResponse)
+
+        let task = session.dataTask(with: request) { data, response, error in
+            defer { semaphore.signal() }
+            if let error = error {
+                result = .failure(.networkError(error))
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                result = .failure(.invalidResponse)
+                return
+            }
+            if httpResponse.statusCode == 200 {
+                result = .success(true)
+            } else {
+                result = .failure(.httpError(statusCode: httpResponse.statusCode))
+            }
+        }
+
+        task.resume()
+        semaphore.wait()
+
+        switch result {
+        case .success(let success):
+            return success
         case .failure(let error):
             throw error
         }

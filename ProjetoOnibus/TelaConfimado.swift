@@ -62,8 +62,17 @@ struct TelaConfimado: View {
                         }
                         mostrarMensagem = true
                         
-                        // Enviar POST para paradafavorita ao clicar no botão
-                        enviarParadaFavorita()
+                        // Enviar POST para paradafavorita ao adicionar
+                        if gerenteDeFavoritos.isFavorito(parada) {
+                            enviarParadaFavorita()
+                        } else {
+                                // Ao remover, precisamos buscar o documento no servidor (pelo campo id)
+                                // para recuperar o _id e _rev e apenas então executar o DELETE.
+                                // Observação: se houver mais de um documento com o mesmo `id`,
+                                // o backend costuma retornar um array; neste caso, a implementação
+                                // busca apenas o primeiro registro e faz o DELETE desse único documento.
+                            enviarDeleteFavorita()
+                        }
                         
                         Task {
                             try? await Task.sleep(nanoseconds: 2_000_000_000)
@@ -189,6 +198,59 @@ struct TelaConfimado: View {
                     carregando = false
                     if !sucesso {
                         erroEnvio = "Falha ao enviar parada favorita"
+                    }
+                    else {
+                        // Atualiza lista de favoritos (sincroniza com servidor)
+                        gerenteDeFavoritos.carregarFavoritos()
+                    }
+                }
+            } catch let error as APIError {
+                DispatchQueue.main.async {
+                    carregando = false
+                    erroEnvio = error.localizedDescription
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    carregando = false
+                    erroEnvio = "Erro desconhecido: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    // MARK: - Envio de DELETE para parada favorita (usando _id/_rev do servidor)
+    private func enviarDeleteFavorita() {
+        guard !carregando else { return }
+        carregando = true
+        erroEnvio = nil
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                // Buscar documento do servidor usando o id da aplicação
+                if let registro = try self.apiService.fetchParadaFavoritaByAppId(parada.id) {
+                    guard let rev = registro._rev else {
+                        DispatchQueue.main.async {
+                            carregando = false
+                            erroEnvio = "Registro sem _rev no servidor"
+                        }
+                        return
+                    }
+
+                    // Enviar delete com _id e _rev
+                    let sucesso = try self.apiService.deleteParadaFavoritaDocument(registro._id, rev: rev)
+                    DispatchQueue.main.async {
+                        carregando = false
+                        if !sucesso {
+                            erroEnvio = "Falha ao remover parada favorita no servidor"
+                        }
+                        else {
+                            gerenteDeFavoritos.carregarFavoritos()
+                        }
+                    }
+                } else {
+                    // Registro não encontrado — considera sucesso ou apenas remove localmente
+                    DispatchQueue.main.async {
+                        carregando = false
                     }
                 }
             } catch let error as APIError {
