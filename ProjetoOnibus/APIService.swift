@@ -10,6 +10,7 @@ import Foundation
 // MARK: - Protocolo para injeção de dependência
 protocol APIServiceProtocol {
     func enviarLocalizacaoParada(idStop: Int, latitude: Double, longitude: Double) throws -> Bool
+    func fetchParadasFavoritas() throws -> [Paradas]
 }
 
 // MARK: - Modelo de dados para requisição
@@ -114,6 +115,57 @@ class APIService: APIServiceProtocol {
         switch result {
         case .success(let success):
             return success
+        case .failure(let error):
+            throw error
+        }
+    }
+
+    /// Busca as paradas favoritas no backend
+    func fetchParadasFavoritas() throws -> [Paradas] {
+        guard let url = URL(string: "\(baseURL)/paradasfavoritas") else {
+            throw APIError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+
+        let semaphore = DispatchSemaphore(value: 0)
+        var result: Result<[Paradas], APIError> = .failure(.invalidResponse)
+
+        let task = session.dataTask(with: request) { data, response, error in
+            defer { semaphore.signal() }
+
+            if let error = error {
+                result = .failure(.networkError(error))
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse,
+                  let data = data else {
+                result = .failure(.invalidResponse)
+                return
+            }
+
+            guard httpResponse.statusCode == 200 else {
+                result = .failure(.httpError(statusCode: httpResponse.statusCode))
+                return
+            }
+
+            do {
+                let decoder = JSONDecoder()
+                let paradas = try decoder.decode([Paradas].self, from: data)
+                result = .success(paradas)
+            } catch {
+                result = .failure(.networkError(error))
+            }
+        }
+
+        task.resume()
+        semaphore.wait()
+
+        switch result {
+        case .success(let paradas):
+            return paradas
         case .failure(let error):
             throw error
         }
