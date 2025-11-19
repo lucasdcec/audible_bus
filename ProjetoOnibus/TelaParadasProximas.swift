@@ -31,6 +31,7 @@ struct TelaParadasProximas: View {
     
     // Instância do serviço de API (usando a implementação real do APIService.swift)
     private let apiService: APIServiceProtocol = APIService()
+    @Environment(\.dismiss) private var dismiss
     
     var paradasOrdenadas: [Paradas] {
         paradas.sorted { $0.distancia < $1.distancia }
@@ -135,7 +136,9 @@ struct TelaParadasProximas: View {
                     
                     // Botões de ação
                     HStack {
-                        NavigationLink(destination: ContentView()) {
+                        Button(action: {
+                            dismiss()
+                        }) {
                             HStack {
                                 Image(systemName: "arrowshape.left.fill")
                                 Text("Voltar")
@@ -194,10 +197,14 @@ struct TelaParadasProximas: View {
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 // Chamar o serviço de API de forma síncrona
+                // Adicionar parâmetro 'solicitado' booleano conforme especificado
+                // Para parada com id == 1, solicitado = true; para as demais, false
+                let solicitado = (parada.id == 1)
                 let sucesso = try apiService.enviarLocalizacaoParada(
                     idStop: parada.id,
                     latitude: parada.latitude,
-                    longitude: parada.longitude
+                    longitude: parada.longitude,
+                    solicitado: solicitado
                 )
                 
                 // Atualizar UI na thread principal

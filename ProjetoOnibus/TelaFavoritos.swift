@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TelaFavoritos: View {
     @EnvironmentObject var gerenteDeFavoritos: GerenteDeFavoritos
-        @State private var carregando: Bool = false
     
     var body: some View {
         ZStack{
@@ -40,14 +39,14 @@ struct TelaFavoritos: View {
                     .font(.title).fontWeight(.bold)
                     .accessibilityLabel("Suas paradas favoritas")
                     .onAppear {
-                        carregando = true
                         gerenteDeFavoritos.carregarFavoritos()
-                        // Pequeno delay para simular carregamento e permitir atualização
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            carregando = false
-                        }
                     }
-                if gerenteDeFavoritos.paradasFavoritas.isEmpty {
+                if gerenteDeFavoritos.carregandoFavoritos {
+                    // Mostrar indicador enquanto carrega
+                    ProgressView("Carregando...")
+                        .padding()
+                } else if gerenteDeFavoritos.paradasFavoritas.isEmpty {
+                    // Mostrar mensagem de nenhuma parada favorita uma única vez
                     List {
                         HStack {
                             VStack(alignment: .leading) {
@@ -63,26 +62,6 @@ struct TelaFavoritos: View {
                         }
                         .accessibilityElement(children: .combine)
                         .accessibilityLabel("Nenhuma parada favorita. Adicione paradas para vê-las aqui")
-                    }
-                    if carregando {
-                        ProgressView("Carregando...")
-                    } else {
-                        List {
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text("Nenhuma parada favorita")
-                                        .font(.headline)
-                                        .foregroundColor(.gray)
-                                    Text("Adicione paradas para vê-las aqui")
-                                        .font(.subheadline)
-                                        .foregroundColor(.blue)
-                                }
-                                Image(systemName: "star.fill")
-                                    .foregroundColor(.yellow)
-                            }
-                            .accessibilityElement(children: .combine)
-                            .accessibilityLabel("Nenhuma parada favorita. Adicione paradas para vê-las aqui")
-                        }
                     }
                 } else {
                     List(gerenteDeFavoritos.paradasFavoritas) { parada in
