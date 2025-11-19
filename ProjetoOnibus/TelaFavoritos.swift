@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TelaFavoritos: View {
     @EnvironmentObject var gerenteDeFavoritos: GerenteDeFavoritos
-        @State private var carregando: Bool = false
     
     var body: some View {
         ZStack{
@@ -40,14 +39,9 @@ struct TelaFavoritos: View {
                     .font(.title).fontWeight(.bold)
                     .accessibilityLabel("Suas paradas favoritas")
                     .onAppear {
-                        carregando = true
                         gerenteDeFavoritos.carregarFavoritos()
-                        // Pequeno delay para simular carregamento e permitir atualização
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            carregando = false
-                        }
                     }
-                if carregando {
+                if gerenteDeFavoritos.carregandoFavoritos {
                     // Mostrar indicador enquanto carrega
                     ProgressView("Carregando...")
                         .padding()

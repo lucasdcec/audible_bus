@@ -176,11 +176,6 @@ class APIService: APIServiceProtocol {
                 result = .success([])
                 return
             }
-            if httpResponse.statusCode == 404 {
-                // Not found: return nil instead of throwing
-                result = .success(nil)
-                return
-            }
             guard (200...299).contains(httpResponse.statusCode) else {
                 result = .failure(.httpError(statusCode: httpResponse.statusCode))
                 return
