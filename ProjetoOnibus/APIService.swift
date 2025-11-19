@@ -239,7 +239,7 @@ class APIService: APIServiceProtocol {
             }
             guard (200...299).contains(httpResponse.statusCode) else {
                 // debug
-                if let responseData = data, let body = String(data: responseData, encoding: .utf8) {
+                if let body = String(data: data, encoding: .utf8) {
                     print("APIService.fetchParadaFavoritaByAppId -> HTTP status: \(httpResponse.statusCode) body: \(body)")
                 } else {
                     print("APIService.fetchParadaFavoritaByAppId -> HTTP status: \(httpResponse.statusCode) (no body)")
