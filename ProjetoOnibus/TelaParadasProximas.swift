@@ -31,6 +31,7 @@ struct TelaParadasProximas: View {
     
     // Instância do serviço de API (usando a implementação real do APIService.swift)
     private let apiService: APIServiceProtocol = APIService()
+    @Environment(\.dismiss) private var dismiss
     
     var paradasOrdenadas: [Paradas] {
         paradas.sorted { $0.distancia < $1.distancia }
@@ -135,7 +136,9 @@ struct TelaParadasProximas: View {
                     
                     // Botões de ação
                     HStack {
-                        NavigationLink(destination: ContentView()) {
+                        Button(action: {
+                            dismiss()
+                        }) {
                             HStack {
                                 Image(systemName: "arrowshape.left.fill")
                                 Text("Voltar")

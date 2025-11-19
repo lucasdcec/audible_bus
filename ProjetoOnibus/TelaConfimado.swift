@@ -17,6 +17,7 @@ struct TelaConfimado: View {
     @State var mensagemTexto: String = ""
     @State var quantidadeVezes: Int = 1
     @EnvironmentObject var gerenteDeFavoritos: GerenteDeFavoritos
+    @Environment(\.dismiss) private var dismiss
 
     // Instância do serviço de API
     private let apiService: APIServiceProtocol = APIService()
@@ -164,7 +165,7 @@ struct TelaConfimado: View {
                     
                     //Botões de ação
                     HStack {
-                        NavigationLink(destination: ContentView()) {
+                    Button(action: { dismiss() }) {
                             HStack {
                                 Image(systemName: "arrowshape.left.fill")
                                 Text("Voltar")
