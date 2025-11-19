@@ -123,7 +123,7 @@ class APIService: APIServiceProtocol {
             if (200...299).contains(httpResponse.statusCode) {
                 result = .success(true)
             } else {
-                if let data = data, let body = String(data: data, encoding: .utf8) {
+                if let responseData = data, let body = String(data: responseData, encoding: .utf8) {
                     print("APIService.enviarLocalizacaoParada -> HTTP status: \(httpResponse.statusCode) body: \(body)")
                 } else {
                     print("APIService.enviarLocalizacaoParada -> HTTP status: \(httpResponse.statusCode) (no body)")
@@ -239,7 +239,7 @@ class APIService: APIServiceProtocol {
             }
             guard (200...299).contains(httpResponse.statusCode) else {
                 // debug
-                if let data = data, let body = String(data: data, encoding: .utf8) {
+                if let responseData = data, let body = String(data: responseData, encoding: .utf8) {
                     print("APIService.fetchParadaFavoritaByAppId -> HTTP status: \(httpResponse.statusCode) body: \(body)")
                 } else {
                     print("APIService.fetchParadaFavoritaByAppId -> HTTP status: \(httpResponse.statusCode) (no body)")
@@ -323,7 +323,7 @@ class APIService: APIServiceProtocol {
             if (200...299).contains(httpResponse.statusCode) {
                 result = .success(true)
             } else {
-                if let data = data, let body = String(data: data, encoding: .utf8) {
+                if let responseData = data, let body = String(data: responseData, encoding: .utf8) {
                     print("APIService.deleteParadaFavoritaDocument -> HTTP status: \(httpResponse.statusCode) body: \(body)")
                 } else {
                     print("APIService.deleteParadaFavoritaDocument -> HTTP status: \(httpResponse.statusCode) (no body)")

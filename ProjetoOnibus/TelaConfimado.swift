@@ -313,7 +313,7 @@ struct TelaConfimado: View {
             if let requestBody = request.httpBody, let bodyString = String(data: requestBody, encoding: .utf8) {
                 print("[enviarFavoritaRequest] request body: \(bodyString)")
             }
-            if let data = data, let responseString = String(data: data, encoding: .utf8) {
+            if let responseData = data, let responseString = String(data: responseData, encoding: .utf8) {
                 print("[enviarFavoritaRequest] response (status \(httpResponse.statusCode)): \(responseString)")
             } else {
                 print("[enviarFavoritaRequest] response status: \(httpResponse.statusCode), no body")
