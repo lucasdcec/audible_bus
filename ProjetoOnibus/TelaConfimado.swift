@@ -58,8 +58,12 @@ struct TelaConfimado: View {
                         
                         if gerenteDeFavoritos.isFavorito(parada) {
                             mensagemTexto = "adicionado aos favoritos"
+                            // Enviar POST para paradafavorita ao adicionar
+                            enviarParadaFavorita()
                         } else {
                             mensagemTexto = "removido dos favoritos"
+                            // Enviar DELETE para paradafavorita/delete ao remover
+                            enviarDeleteFavorita()
                         }
                         mostrarMensagem = true
                         
@@ -268,6 +272,76 @@ struct TelaConfimado: View {
                     erroEnvio = "Erro desconhecido: \(error.localizedDescription)"
                 }
             }
+        }
+    }
+
+    // MARK: - Envio de DELETE parada favorita
+    private func enviarDeleteFavorita() {
+        guard !carregando else { return }
+        carregando = true
+        erroEnvio = nil
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                let sucesso = try enviarDeleteRequest(id: parada.id)
+                DispatchQueue.main.async {
+                    carregando = false
+                    if !sucesso {
+                        erroEnvio = "Falha ao remover parada favorita"
+                    }
+                }
+            } catch let error as APIError {
+                DispatchQueue.main.async {
+                    carregando = false
+                    erroEnvio = error.localizedDescription
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    carregando = false
+                    erroEnvio = "Erro desconhecido: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    // Envia o DELETE para /paradafavorita/delete
+    private func enviarDeleteRequest(id: Int) throws -> Bool {
+        guard let url = URL(string: "http://127.0.0.1:1880/paradafavorita/delete") else {
+            throw APIError.invalidURL
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let body = ["id": id]
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch {
+            throw APIError.networkError(error)
+        }
+        let semaphore = DispatchSemaphore(value: 0)
+        var result: Result<Bool, APIError> = .failure(.invalidResponse)
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            defer { semaphore.signal() }
+            if let error = error {
+                result = .failure(.networkError(error))
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse else {
+                result = .failure(.invalidResponse)
+                return
+            }
+            if httpResponse.statusCode == 200 {
+                result = .success(true)
+            } else {
+                result = .failure(.httpError(statusCode: httpResponse.statusCode))
+            }
+        }
+        task.resume()
+        semaphore.wait()
+        switch result {
+        case .success(let success):
+            return success
+        case .failure(let error):
+            throw error
         }
     }
 
